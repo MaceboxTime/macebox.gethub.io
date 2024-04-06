@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .cnv {
+            background-color: black;
+            background-color: ;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="cnv" class="cnv"></canvas>
+    <script>
+        let cnv = document.getElementById("cnv")
+        cnv.width = window.innerWidth
+        cnv.height = window.innerHeight
+
+        let ctx = cnv.getContext("2d")
+
+        var colorArr = ["green", "red", "yellow", "blue", "brown", "aqua"]
+        var x = 0;
+        var y = 0;
+        var particles = []
+        
+        // window.addEventListener("mousedown", (e) => {
+        //     x = e.pageX;
+        //     y = e.pageY;
+        //     init()
+        // })
+
+        class Particle {
+            constructor(x,y,dx,dy,size,color) {
+                this.x = x;
+                this.y = y;
+                this.dx = dx;
+                this.dy = dy;
+                this.size = size;
+                this.color = color;
+            }
+
+            draw() {
+                if(this.size > 0) {
+                    ctx.beginPath();
+                    ctx.fillStyle = this.color;
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill()
+                    
+                    this.x += this.dx;
+                    this.y += this.dy;
+                    ctx.closePath()
+                    
+                    this.size -= 0.008;
+                }
+            }
+        }
+
+        function init() {
+            const clr = colorArr[Math.floor(Math.random() * colorArr.length)]
+            for(let i=0; i<100; i++) {
+                dx = (Math.random()-0.5) * Math.random() * 10;
+                dy = (Math.random()-0.5) * Math.random() * 10;
+                particles.push(new Particle(x,y,dx,dy,1.5,clr));
+            }
+        }
+
+        function animate() {
+            ctx.beginPath();
+            ctx.fillStyle ="rgba(0,0,0,0.2)"
+            ctx.fillRect(0, 0, cnv.width, cnv.height);
+            ctx.closePath();
+            for(const part of particles) {
+                part.draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        setInterval(() => {
+            x = Math.floor(Math.random()*cnv.width)
+            y = Math.floor(Math.random()*cnv.height)
+            init()
+        }, 1500)
+
+        animate()
+    </script>
+</body>
+</html>
